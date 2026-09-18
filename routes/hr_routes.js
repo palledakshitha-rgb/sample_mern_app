@@ -1,13 +1,22 @@
-let express=require('express');
-let route=express.Router();
+let express = require("express");
+let router = express.Router();
 
-route.get("/employees",(req,res)=>{
+// Employees
+router.get("/employees", (req, res) => {
+
     res.send("Employees called");
-
 });
-Router.post("assign-task",(req,res)=>{
-    res.send("assign task page is called");
 
-})
+// Assign Task
+router.post("/assign-task", (req, res) => {
 
+    let data = req.body;
+
+    res.send({
+        message: "Task Assigned",
+        details: data
+    });
+});
+
+module.exports = router;
 
