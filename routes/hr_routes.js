@@ -1,22 +1,40 @@
-let express = require("express");
+let express = require('express');
 let router = express.Router();
+let {users}=require('../models/users');
 
-// Employees
-router.get("/employees", (req, res) => {
-
-    res.send("Employees called");
+router.get("/employees",async(req,res)=>{
+    let result=await users.find()
+    result.password=undefined;
+    res.send(result);
 });
 
-// Assign Task
-router.post("/assign-task", (req, res) => {
+router.delete("/deleteemp/:id",async(req,res)=>{
+    let result =await users.findByIdAndDelete(req.params.id);
+    if(result){
+        res.send("emp record deletion success")
+    }
+    res.send("delete route called");
+})
 
-    let data = req.body;
-
-    res.send({
-        message: "Task Assigned",
-        details: data
-    });
+router.post("/assign-task",(req,res)=>{
+    res.send("Assign task page called");
 });
 
-module.exports = router;
+router.get("/tasks",(req,res)=>{
+    res.send("Tasks");
+});
 
+router.get("/notifications",(req,res)=>{
+    res.send("Notifications");
+});
+
+router.patch("/updateprofile/:id",async(req,res)=>{
+    let data=req.body;
+    if(data.password){
+        data.password=await bcrypt.hash(data.password,10);
+    }
+    let updatedata=await users.findByIdAndUpdate(req.params.id,{$set:data});
+    res.send(updatedata);
+})
+
+module.exports=router;
